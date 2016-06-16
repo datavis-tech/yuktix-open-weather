@@ -1,5 +1,5 @@
 # yuktix-open-weather
-Visualizations for open weather data in Bangalore.
+Visualizations for open weather data in Bangalore. Part of the [Yuktix Open Weather Project](www.yuktix.com/open-weather-project/)
 
 [![image](https://cloud.githubusercontent.com/assets/68416/16123545/02fa6d70-3409-11e6-96bf-f240029353d2.png)](http://bl.ocks.org/curran/de831e1e04057147f612456460047df4)
 A first prototype piece, visualizing a snapshot of temperature around Bangalore.
