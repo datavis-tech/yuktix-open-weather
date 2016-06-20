@@ -27,13 +27,13 @@
 
 var width = 960,
     height = 480,
-    userColor = "orange",
-    userSize = 4,
+    stationColor = "orange",
+    stationSize = 4,
     linkColor = "orange";
 
 var projection = d3.geo.equirectangular()
-    .scale(153)
-    .translate([width / 2, height / 2])
+    .scale(1000)
+    .translate([-800, 600])
     .precision(.1);
 
 var path = d3.geo.path()
@@ -67,8 +67,8 @@ d3.json("https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba16920754
       console.log(JSON.stringify(data,null,3));
     data=data.result.map(type);
     svg.selectAll("circle").data(data).enter().append("circle")
-      .attr("r", userSize)
-      .attr("fill", userColor)
+      .attr("r", stationSize)
+      .attr("fill", stationColor)
       .attr("cx", function (d){ return d.projected[0]; }) 
       .attr("cy", function (d){ return d.projected[1]; })
       .append("title")
@@ -87,27 +87,9 @@ d3.json("https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba16920754
   });
 });
 function type(d){
-  
-  // This should actually be [d.longitude, d.latitude]
-  // It looks like these are reversed in the data.
   d.projected = projection([ +d.longitude,+d.latitude]);
   return d;
 }
-       
-//function generateLinks(data){
-//  locationsByUser = {};
-//  data.forEach(function (d){
-//    locationsByUser[d.user_name] = d.projected;
-//  });
-  
-//  return data.filter(function (d){
-//    return d.invited_by_user_name;
-//  }).map(function (d){
-//    d.projected_invited_by = locationsByUser[d.invited_by_user_name];
-//    //console.log(d.projected_invited_by);
-//    return d;
-//  });
-//}
   
 d3.select(self.frameElement).style("height", height + "px");
 
