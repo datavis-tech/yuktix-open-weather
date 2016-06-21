@@ -32,6 +32,8 @@ var width = 960,
     linkColor = "orange";
 
 var projection = d3.geo.equirectangular()
+//    .scale(153)
+ //   .translate([width / 2, height / 2])
     .scale(1000)
     .translate([-800, 600])
     .precision(.1);
