@@ -22,7 +22,7 @@ path {
 
 var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
-    stationColor = "orange",
+    stationColor = d3.scale.linear().range(["white", "steelblue"]),    
     stationSize = .0001;
 
 var tile = d3.geo.tile()
