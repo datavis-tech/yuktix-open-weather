@@ -39,15 +39,6 @@ var path = d3.geoPath()
 
 var zoom = d3.zoom()
     .on("zoom", zoomed);
-//    .scale(projection.scale() * 2 * Math.PI)
-//    .scaleExtent([1 << 11, 1 << 14])
-    //.translate([width - center[0], height - center[1]])
-
-function transform(){
-  return d3.zoomIdentity
-    .translate(-41951.17534656764, 7402.282555357876)
-    .scale(198668.00180565089)
-}
 
 // With the center computed, now adjust the projection such that
 // it uses the zoom behavior’s translate and scale.
@@ -64,19 +55,21 @@ var raster = svg.append("g");
 var vector = svg.append("g");
 
 svg.call(zoom);
-svg.call(zoom.transform, transform());
-//vector.attr("d", path(topojson.mesh(us, us.objects.counties)));
+
+// Zoom into Bangalore.
+svg.call(zoom.transform, d3.zoomIdentity
+  .translate(-41951.175, 7402.282)
+  .scale(198668));
+
 zoomed();
 
 function zoomed() {
   var transform = d3.zoomTransform(svg.node());
-  console.log(transform);
-  //console.log(transform.scale());
-  //console.log(transform.translate());
+
   var tiles = tile
-      .scale(transform.k)
-      .translate([transform.x, transform.y])
-      ();
+    .scale(transform.k)
+    .translate([transform.x, transform.y])
+    ();
 
   vector.attr("transform", transform);
 
@@ -89,7 +82,8 @@ function zoomed() {
       .remove();
 
   image.enter().append("image")
-      .attr("xlink:href", function(d) { return "http://a.tile.openstreetmap.org/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
+//      .attr("xlink:href", function(d) { return "http://a.tile.openstreetmap.org/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
+      .attr("xlink:href", function(d) { return "http://stamen-tiles-a.a.ssl.fastly.net/toner-lite/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
       .attr("width", 1)
       .attr("height", 1)
       .attr("x", function(d) { return d[0]; })
@@ -106,7 +100,7 @@ d3.json("data.json", function (data){
   data = data.result.map(type);
   data = data.filter(function (d){return d.T;})
   stationColor.domain(d3.extent(data,function(d){return d.T;}));
-//console.log(data);
+
   vector.selectAll("circle").data(data).enter().append("circle")
     .attr("fill", function(d){return stationColor(d.T)})
     .attr("cx", function (d){ return d.projected[0]; }) 
