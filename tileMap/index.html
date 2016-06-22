@@ -23,7 +23,7 @@ path {
 var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
     stationColor = "orange",
-    stationSize = 11;
+    stationSize = .0001;
 
 var tile = d3.geo.tile()
     .size([width, height]);
@@ -38,11 +38,11 @@ var path = d3.geo.path()
     .projection(projection);
 
 var zoom = d3.behavior.zoom()
-    .scale(123959.16427965282)
-    .translate([-26136.88, 4869.087])
+    .scale(198668.00180565089)
+    .translate([-41951.17534656764, 7402.282555357876])
     .on("zoom", zoomed);
 //    .scale(projection.scale() * 2 * Math.PI)
-//  .scaleExtent([1 << 11, 1 << 14])
+//    .scaleExtent([1 << 11, 1 << 14])
     //.translate([width - center[0], height - center[1]])
 
 // With the center computed, now adjust the projection such that
@@ -57,15 +57,15 @@ var svg = d3.select("body").append("svg")
 
 var raster = svg.append("g");
 
-var vector = svg.append("path");
+var vector = svg.append("g");
 
 svg.call(zoom);
 //vector.attr("d", path(topojson.mesh(us, us.objects.counties)));
 zoomed();
 
 function zoomed() {
-  //  console.log(zoom.scale());
-//    console.log(zoom.translate());
+     console.log(zoom.scale());
+     console.log(zoom.translate());
   var tiles = tile
       .scale(zoom.scale())
       .translate(zoom.translate())
