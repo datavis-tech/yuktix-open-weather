@@ -78,11 +78,10 @@ function zoomed() {
       .translate([transform.x, transform.y])
       ();
 
-  vector
-      .attr("transform", transform);
+  vector.attr("transform", transform);
 
   var image = raster
-      .attr("transform", transform)
+      .attr("transform", "scale(" + tiles.scale + ")translate(" + tiles.translate + ")")
     .selectAll("image")
       .data(tiles, function(d) { return d; });
 
