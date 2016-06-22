@@ -15,35 +15,39 @@ path {
 
 </style>
 <body>
-<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="//d3js.org/d3.v4.0.0-alpha.50.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script src="d3.geo.tile.min.js"></script>
 <script>
 
 var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
-    stationColor = d3.scale.linear().range(["rgb(253,183,123)", "rgb(164,53,3)"]),    
+    stationColor = d3.scaleLinear().range(["rgb(253,183,123)", "rgb(164,53,3)"]),    
     stationSize = .0001;
 
-var tile = d3.geo.tile()
+var tile = d3.geoTile()
     .size([width, height]);
 
-var projection = d3.geo.mercator()
+var projection = d3.geoMercator()
     .scale((1 << 12) / 2 / Math.PI)
     .translate([width / 2, height / 2]);
 
 var center = projection([-100, 40]);
 
-var path = d3.geo.path()
+var path = d3.geoPath()
     .projection(projection);
 
-var zoom = d3.behavior.zoom()
-    .scale(198668.00180565089)
-    .translate([-41951.17534656764, 7402.282555357876]) //changed the scale
+var zoom = d3.zoom()
     .on("zoom", zoomed);
 //    .scale(projection.scale() * 2 * Math.PI)
 //    .scaleExtent([1 << 11, 1 << 14])
     //.translate([width - center[0], height - center[1]])
+
+function transform(){
+  return d3.zoomIdentity
+    .translate(-41951.17534656764, 7402.282555357876)
+    .scale(198668.00180565089)
+}
 
 // With the center computed, now adjust the projection such that
 // it uses the zoom behavior’s translate and scale.
@@ -60,20 +64,21 @@ var raster = svg.append("g");
 var vector = svg.append("g");
 
 svg.call(zoom);
+svg.call(zoom.transform, transform());
 //vector.attr("d", path(topojson.mesh(us, us.objects.counties)));
 zoomed();
 
 function zoomed() {
-     console.log(zoom.scale());
-     console.log(zoom.translate());
+  var transform = d3.zoomTransform(svg.node());
+  console.log(transform);
+  //console.log(transform.scale());
+  //console.log(transform.translate());
   var tiles = tile
-      .scale(zoom.scale())
-      .translate(zoom.translate())
+      .scale(transform.k)
+      .translate([transform.x, transform.y])
       ();
 
-  vector
-      .attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")")
-      .style("stroke-width", 1 / zoom.scale());
+  vector.attr("transform", transform);
 
   var image = raster
       .attr("transform", "scale(" + tiles.scale + ")translate(" + tiles.translate + ")")
