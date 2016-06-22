@@ -23,7 +23,7 @@ path {
 var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
     stationColor = d3.scaleLinear().range(["rgb(253,183,123)", "rgb(164,53,3)"]),    
-    stationSize = .0001;
+    stationSize = 10;
 
 var tile = d3.geoTile()
     .size([width, height]);
@@ -89,23 +89,29 @@ function zoomed() {
       .remove();
 
   image.enter().append("image")
-      .attr("xlink:href", function(d) { return "http://" + ["a", "b", "c"][Math.random() * 3 | 0] + ".tile.openstreetmap.org/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
+      .attr("xlink:href", function(d) { return "http://a.tile.openstreetmap.org/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
       .attr("width", 1)
       .attr("height", 1)
       .attr("x", function(d) { return d[0]; })
       .attr("y", function(d) { return d[1]; });
+
+  vector.selectAll("circle")
+    .attr("r", stationSize / transform.k);
+
+  console.log(stationSize / transform.k);
 }
 
 d3.json("data.json", function (data){
+  var transform = d3.zoomTransform(svg.node());
   data = data.result.map(type);
   data = data.filter(function (d){return d.T;})
   stationColor.domain(d3.extent(data,function(d){return d.T;}));
 //console.log(data);
   vector.selectAll("circle").data(data).enter().append("circle")
-    .attr("r", stationSize)
     .attr("fill", function(d){return stationColor(d.T)})
     .attr("cx", function (d){ return d.projected[0]; }) 
     .attr("cy", function (d){ return d.projected[1]; })
+    .attr("r", stationSize / transform.k)
     .append("title")
     .text(function(d){return d.address;});
 });
