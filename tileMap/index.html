@@ -38,12 +38,12 @@ var path = d3.geo.path()
     .projection(projection);
 
 var zoom = d3.behavior.zoom()
+    .scale(123959.16427965282)
+    .translate([-26136.88, 4869.087])
+    .on("zoom", zoomed);
 //    .scale(projection.scale() * 2 * Math.PI)
-      .scale(123959.16427965282)
 //  .scaleExtent([1 << 11, 1 << 14])
     //.translate([width - center[0], height - center[1]])
-      .translate([-26136.88820548502, 4869.087017752499]) ///method chan
-    .on("zoom", zoomed);
 
 // With the center computed, now adjust the projection such that
 // it uses the zoom behavior’s translate and scale.
@@ -90,29 +90,18 @@ function zoomed() {
       .attr("x", function(d) { return d[0]; })
       .attr("y", function(d) { return d[1]; });
 }
-    d3.json("data.json", function (data){
-  //    console.log(JSON.stringify(data,null,3));
-    data=data.result.map(type);
-        console.log(data);
-    //svg.selectAll("circle").data(data).enter().append("circle")
-      vector.selectAll("circle").data(data).enter().append("circle")
-        .attr("r", stationSize)
-      .attr("fill", stationColor)
-      .attr("cx", function (d){ return d.projected[0]; }) 
-      .attr("cy", function (d){ return d.projected[1]; })
-      .append("title")
-        .text(function(d){return d.address;});
-//    var links = generateLinks(data);
-    
-//    svg.selectAll("line").data(links).enter().append("line")
-//      .attr("r", 4)
-//      .attr("stroke", linkColor)
-//      .attr("stroke-width", "1px")
-//      .attr("x1", function (d){ return d.projected[0]; })
-//      .attr("y1", function (d){ return d.projected[1]; })
-//      .attr("x2", function (d){ return d.projected_invited_by[0]; })
-//      .attr("y2", function (d){ return d.projected_invited_by[1]; });
-  });
+
+d3.json("data.json", function (data){
+  data = data.result.map(type);
+  console.log(data);
+  vector.selectAll("circle").data(data).enter().append("circle")
+    .attr("r", stationSize)
+    .attr("fill", stationColor)
+    .attr("cx", function (d){ return d.projected[0]; }) 
+    .attr("cy", function (d){ return d.projected[1]; })
+    .append("title")
+    .text(function(d){return d.address;});
+});
 
 function type(d){
   d.projected = projection([ +d.longitude,+d.latitude]);
