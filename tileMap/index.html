@@ -7,10 +7,9 @@ body {
 }
 
 path {
-  fill: none;
-  stroke: red;
-  stroke-linejoin: round;
-  stroke-width: 1.5px;
+  fill: rgba(0,0,0,0.1);
+  stroke-width: 0.000001px;
+  stroke: black;
 }
 
 </style>
@@ -32,6 +31,11 @@ var tile = d3.tile()
 var projection = d3.geoMercator()
     .scale((1 << 12) / 2 / Math.PI)
     .translate([width / 2, height / 2]);
+
+var voronoi = d3.voronoi()
+    .x(function(d) { return d.projected[0]; }) 
+    .y(function(d) { return d.projected[1]; })
+    .extent([[-1, -1], [width + 1, height + 1]]);
 
 var center = projection([-100, 40]);
 
@@ -106,13 +110,28 @@ d3.json("data.json", function (data){
   data = data.filter(function (d){return d.T;})
   stationColor.domain(d3.extent(data,function(d){return d.T;}));
 
-  vector.selectAll("circle").data(data).enter().append("circle")
-    .attr("fill", function(d){return stationColor(d.T)})
-    .attr("cx", function (d){ return d.projected[0]; }) 
-    .attr("cy", function (d){ return d.projected[1]; })
-    .attr("r", stationSize / transform.k)
-    .append("title")
-    .text(function(d){return d.address;});
+  var circle = vector.selectAll("g")
+    .data(data)
+    .enter().append("g");
+
+  var cell = circle.append("path")
+    .data(voronoi.polygons(data))
+      .attr("d", renderCell)
+      .attr("id", function(d, i) { return "cell-" + i; });
+
+  circle.append("clipPath")
+      .attr("id", function(d, i) { return "clip-" + i; })
+    .append("use")
+      .attr("xlink:href", function(d, i) { return "#cell-" + i; });
+
+  circle.append("circle")
+      .attr("clip-path", function(d, i) { return "url(#clip-" + i + ")"; })
+      .attr("fill", function(d){return stationColor(d.T)})
+      .attr("cx", function (d){ return d.projected[0]; }) 
+      .attr("cy", function (d){ return d.projected[1]; })
+      .attr("r", stationSize / transform.k)
+      .append("title")
+      .text(function(d){return d.address;});
 
   var legendBackground = legend.append("rect")
     .attr("width", 90)
@@ -142,6 +161,10 @@ d3.json("data.json", function (data){
       .text(function (d){ return d + " °C"; }); 
 
 });
+
+function renderCell(d) {
+  return d == null ? null : "M" + d.join("L") + "Z";
+}
 
 function type(d){
   d.T = +d.T;
