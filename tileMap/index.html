@@ -18,7 +18,7 @@ path {
 <script src="//d3js.org/d3.v4.0.0-alpha.50.min.js"></script>
 <script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
-<script src="d3.geo.tile.min.js"></script>
+<script src="//d3js.org/d3-tile.v0.0.min.js"></script>
 <script>
 
 var width = Math.max(960, window.innerWidth),
@@ -26,7 +26,7 @@ var width = Math.max(960, window.innerWidth),
     stationColor = d3.scaleSequential(d3.interpolateOranges);
     stationSize = 10;
 
-var tile = d3.geoTile()
+var tile = d3.tile()
     .size([width, height]);
 
 var projection = d3.geoMercator()
