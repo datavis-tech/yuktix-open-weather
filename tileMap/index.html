@@ -16,13 +16,14 @@ path {
 </style>
 <body>
 <script src="//d3js.org/d3.v4.0.0-alpha.50.min.js"></script>
+<script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script src="d3.geo.tile.min.js"></script>
 <script>
 
 var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
-    stationColor = d3.scaleLinear().range(["rgb(253,183,123)", "rgb(164,53,3)"]),    
+    stationColor = d3.scaleSequential(d3.interpolateOranges);
     stationSize = 10;
 
 var tile = d3.geoTile()
@@ -51,12 +52,12 @@ var svg = d3.select("body").append("svg")
     .attr("height", height);
 
 var raster = svg.append("g")
-    .attr("opacity", 0.6);
+    .attr("opacity", 0.4);
 
 var vector = svg.append("g");
 
 var legend = svg.append("g")
-  .attr("transform", "translate(20, 20)");
+  .attr("transform", "translate(10, 10)");
 
 svg.call(zoom);
 
