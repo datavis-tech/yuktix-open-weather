@@ -55,7 +55,8 @@ var raster = svg.append("g")
 
 var vector = svg.append("g");
 
-var legend = svg.append("g");
+var legend = svg.append("g")
+  .attr("transform", "translate(20, 20)");
 
 svg.call(zoom);
 
@@ -112,12 +113,20 @@ d3.json("data.json", function (data){
     .append("title")
     .text(function(d){return d.address;});
 
+  var legendBackground = legend.append("rect")
+    .attr("width", 90)
+    .attr("height", 190)
+    .attr("rx", 10)
+    .attr("ry", 10)
+    .attr("fill", "white")
+    .attr("opacity", 0.8);
+
   var legendEntries = legend.selectAll(".legend-entry")
       .data(stationColor.ticks().reverse())
     .enter().append("g")
       .attr("class", "legend-entry")
       .attr("transform", function(d, i) {
-        return "translate(" + (20) + "," + (20 + i * 25) + ")";
+        return "translate(10," + (10 + i * 25) + ")";
       });
  
   legendEntries.append("rect")
