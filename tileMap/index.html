@@ -29,10 +29,10 @@ var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
     stationColor = d3.scaleSequential(d3.interpolateOranges),
     stationSize = 10,
-    names = {
+    namesToAdd = {
       T: "Temperature"
-    };
-
+    },
+    namesToOmit =["id","latitude","longitude"];
 
 var tile = d3.tile()
     .size([width, height]);
@@ -124,8 +124,9 @@ d3.json("data.json", function (data){
       //$(this).popover({ content : String(d.T) })  
       $(this).popover({
         content : Object.keys(d)
+          .filter(function(key){ return namesToOmit.indexOf(key)==-1})
           .map(function(key){
-            var name = (key in names) ? names[key] : key;
+            var name = (key in namesToAdd) ? namesToAdd[key] : key;
             return "<strong>" + name +" : </strong>" + d[key]
           })
           .join("<br>") ,
