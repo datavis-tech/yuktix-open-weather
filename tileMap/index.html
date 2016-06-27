@@ -27,8 +27,12 @@ path {
 
 var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
-    stationColor = d3.scaleSequential(d3.interpolateOranges);
-    stationSize = 10;
+    stationColor = d3.scaleSequential(d3.interpolateOranges),
+    stationSize = 10,
+    names = {
+      T: "Temperature"
+    };
+
 
 var tile = d3.tile()
     .size([width, height]);
@@ -116,13 +120,16 @@ d3.json("data.json", function (data){
     .attr("cy", function (d){ return d.projected[1]; })
     .attr("r", stationSize / transform.k)
     .on("mouseenter",function(d){
+//      console.log(Object.keys(d).join("\n"));
       //$(this).popover({ content : String(d.T) })  
       $(this).popover({
-           //content : "<strong>Temperature : </strong>" +" "+ d.T ,
-//           content : Object.keys(d).join("<br>") ,
-           content : Object.keys(d).map(function(key){ return "<strong>" +key +" : </strong>" + d[key]}).join("<br>") ,
-           html : true ,
-//           placement : " "
+        content : Object.keys(d)
+          .map(function(key){
+            var name = (key in names) ? names[key] : key;
+            return "<strong>" + name +" : </strong>" + d[key]
+          })
+          .join("<br>") ,
+        html : true ,
       })  
       
       $(this).popover("show")
