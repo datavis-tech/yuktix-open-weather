@@ -116,7 +116,15 @@ d3.json("data.json", function (data){
     .attr("cy", function (d){ return d.projected[1]; })
     .attr("r", stationSize / transform.k)
     .on("mouseenter",function(d){
-      $(this).popover({ content : String(d.T) })  
+      //$(this).popover({ content : String(d.T) })  
+      $(this).popover({
+           //content : "<strong>Temperature : </strong>" +" "+ d.T ,
+//           content : Object.keys(d).join("<br>") ,
+           content : Object.keys(d).map(function(key){ return "<strong>" +key +" : </strong>" + d[key]}).join("<br>") ,
+           html : true ,
+//           placement : " "
+      })  
+      
       $(this).popover("show")
     }) //mouseevent 
     .on("mouseleave",function(d){
