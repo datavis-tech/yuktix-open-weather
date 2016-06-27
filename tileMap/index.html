@@ -32,7 +32,7 @@ var width = Math.max(960, window.innerWidth),
     namesToAdd = {
       T: "Temperature"
     },
-    namesToOmit =["id","latitude","longitude"];
+    namesToOmit =["id","latitude","longitude","address","projected"];
 
 var tile = d3.tile()
     .size([width, height]);
