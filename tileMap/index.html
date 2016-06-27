@@ -111,9 +111,11 @@ d3.json("data.json", function (data){
     .attr("cx", function (d){ return d.projected[0]; }) 
     .attr("cy", function (d){ return d.projected[1]; })
     .attr("r", stationSize / transform.k)
+    .on("mouseenter",function(d){console.log(d)}) //mouseevent 
     .append("title")
-    .text(function(d){return d.address;});
-
+    .text(function(d){return d.address;})
+    
+  
   var legendBackground = legend.append("rect")
     .attr("width", 90)
     .attr("height", 190)
