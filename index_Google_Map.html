@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+  <style>
+
+html, body,#map{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.stations, .stations svg {
+  position: absolute;
+}
+
+</style>
+<div id="map"></div>
+<script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAy8yJCcByG3n-Br813XuNo9U7oG1YHVzw">
+</script>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    </head> 
+<body>
+  <script type="text/javascript">
+    var locations = [
+                            ['Girinigar',12.939099,77.54362],
+            ];
+    
+    var lat_center = 12.9716,
+        long_center = 77.5946;
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: new google.maps.LatLng(lat_center, long_center),
+            disableDefaultUI: false,
+            disableDoubleClickZoom: false,
+            draggable: false,
+            scrollwheel: false,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+    });
+    
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i, text;
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+          position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+          map: map
+      });
+      text = locations[i][0];
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, text) {
+        return function() {
+          infowindow.setContent(text);
+          infowindow.open(map, marker);
+        }
+      })(marker, text));
+    }
+
+  </script>
+</body>
+</html>
